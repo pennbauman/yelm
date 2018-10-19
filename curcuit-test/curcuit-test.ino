@@ -20,7 +20,7 @@ void setLED(bool state) {
 void loop() {
   int connectionState = analogRead(connectionPin);
   Serial.println(connectionState);
-  bool connected (connectionState > 200);
+  bool connected (connectionState > 400);
   setLED(connected);
   
   delay(500);
