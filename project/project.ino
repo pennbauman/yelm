@@ -4,7 +4,7 @@
 solvedState = false;
 
 // Pins
-const int plugsPin = 6;
+const int plugsPin = A0;
 const int buttonPin = 7;
 const int piezoPin = 11;
 const int LEDPin = 13;
@@ -77,12 +77,22 @@ bool checkButton(void) {
 }
 
 void handleButtonCheck(void) {
-  
+  int plugsState = analogRead(plugsPin);
+  //Serial.println(plugsState);
+  if (connectionState > 400) {
+    solvedState = true;
+    setLED(true);
+    Serial.println("Success!");
+  } else {
+    Serial.println("Try again.");
+    tone(piezoPin, 1000, 100);
+  }
 }
 
 void handleButtonReset(void) {
   solvedState = false;
   Serial.println("-- System Reset");
+  setLED(false);
   tone(piezoPin, 400, 100);
 }
 
@@ -123,5 +133,13 @@ void checkRFID(void) {
         Serial.println("Wrong ID");
       }
     } //*/
+  }
+}
+
+void setLED(bool state) {
+  if (state) {
+    digitalWrite(LEDPin, HIGH);
+  } else {
+    digitalWrite(LEDPin, LOW);
   }
 }
