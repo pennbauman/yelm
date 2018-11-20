@@ -13,22 +13,22 @@ Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
 std::map<int, std::string> animalsIDs;
-animalsIDs[0] = std::string("1. ");
-animalsIDs[1] = std::string("2. ");
-animalsIDs[2] = std::string("3. ");
-animalsIDs[3] = std::string("4. ");
-animalsIDs[4] = std::string("5. ");
-animalsIDs[5] = std::string("6. ");
-animalsIDs[6] = std::string("7. ");
+animalsIDs[0] = std::string("1. Mon-o'-War");
+animalsIDs[1] = std::string("2. Sea Turtle");
+animalsIDs[2] = std::string("3. Phytoplankton");
+animalsIDs[3] = std::string("4. Brain Coral");
+animalsIDs[4] = std::string("5. Copepod");
+animalsIDs[5] = std::string("6. Hatchet Fish");
+animalsIDs[6] = std::string("7. Coelacanth");
 animalsIDs[7] = std::string("8. ");
 animalsIDs[8] = std::string("9. ");
 
 byte RFIDs[][] = {
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
+  {0x83, 0x76, 0x4E, 0x9F},
+  {0xE3, 0x78, 0x50, 0x9F},
+  {0xB3, 0x3A, 0x4D, 0x9F},
+  {0xB3, 0xEC, 0x4C, 0x9F},
+  {0x13, 0x3B, 0x4E, 0x9F},
   {0xA7, 0xE3, 0x2E, 0x70},
   {0xA7, 0xE3, 0x2E, 0x70},
   {0xA7, 0xE3, 0x2E, 0x70},
