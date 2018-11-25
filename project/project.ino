@@ -1,7 +1,7 @@
 #include <Adafruit_PN532.h>
 
 // Set State
-solvedState = false;
+bool solvedState = false;
 
 // Pins
 const int plugsPin = A0;
@@ -12,28 +12,24 @@ const int LEDPin = 13;
 Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
-std::map<int, std::string> animalsIDs;
-animalsIDs[0] = std::string("1. Mon-o'-War");
-animalsIDs[1] = std::string("2. Sea Turtle");
-animalsIDs[2] = std::string("3. Phytoplankton");
-animalsIDs[3] = std::string("4. Brain Coral");
-animalsIDs[4] = std::string("5. Copepod");
-animalsIDs[5] = std::string("6. Hatchet Fish");
-animalsIDs[6] = std::string("7. Coelacanth");
-animalsIDs[7] = std::string("8. ");
-animalsIDs[8] = std::string("9. ");
+//std::map<int, std::string> animalsIDs;
 
-byte RFIDs[][] = {
+String animalIDs[] = {"1. Mon-o'-War","2. Sea Turtle","3. Phytoplankton","4. Brain Coral","5. Hatchet Fish","6. Coelacanth","7. Copepod","8. Brittle Star","9. BlobFish"};
+
+
+byte RFIDs[9][4] = {
   {0x83, 0x76, 0x4E, 0x9F},
   {0xE3, 0x78, 0x50, 0x9F},
-  {0xB3, 0x3A, 0x4D, 0x9F},
+  {0x83, 0x3A, 0x4D, 0x9F},
   {0xB3, 0xEC, 0x4C, 0x9F},
+  
+  {0x63, 0xAA, 0x4E, 0x9F},
+  {0x63, 0x58, 0x4C, 0x9F},
   {0x13, 0x3B, 0x4E, 0x9F},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-  {0xA7, 0xE3, 0x2E, 0x70},
-}
+  
+  {0x83, 0xE4, 0x51, 0x9F},
+  {0x63, 0xB5, 0x4E, 0x9F},
+};
 const int numAnimals = 9;
 
 void setup() {
