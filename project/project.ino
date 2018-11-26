@@ -12,48 +12,54 @@ const int LEDPin = 13;
 Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
-//std::map<int, std::string> animalsIDs;
+String animalIDs[] = {
+  "1. Mon-o'-War", 
+  "2. Sea Turtle", 
+  "3. Phytoplankton", 
+  "4. Brain Coral", 
+  "5. Copepod", 
+  "6. Hatchet Fish", 
+  "7. Coelacanth", 
+  "8. ", 
+  "9. " 
+};
 
-String animalIDs[] = {"1. Mon-o'-War","2. Sea Turtle","3. Phytoplankton","4. Brain Coral","5. Hatchet Fish","6. Coelacanth","7. Copepod","8. Brittle Star","9. BlobFish"};
-
-
-byte RFIDs[9][4] = {
+byte RFIDs[][4] = {
   {0x83, 0x76, 0x4E, 0x9F},
   {0xE3, 0x78, 0x50, 0x9F},
-  {0x83, 0x3A, 0x4D, 0x9F},
+  {0xB3, 0x3A, 0x4D, 0x9F},
   {0xB3, 0xEC, 0x4C, 0x9F},
-  
-  {0x63, 0xAA, 0x4E, 0x9F},
-  {0x63, 0x58, 0x4C, 0x9F},
   {0x13, 0x3B, 0x4E, 0x9F},
-  
-  {0x83, 0xE4, 0x51, 0x9F},
-  {0x63, 0xB5, 0x4E, 0x9F},
+  {0xA7, 0xE3, 0x2E, 0x70},
+  {0xA7, 0xE3, 0x2E, 0x70},
+  {0xA7, 0xE3, 0x2E, 0x70},
+  {0xA7, 0xE3, 0x2E, 0x70},
 };
 const int numAnimals = 9;
+
+int pastButton = 0;
 
 void setup() {
   Serial.begin(9600);
   Serial.println("-- System Started");
-
+  /*
   if(!SetupRFIDShield()) //sets up the RFID
   {
     Serial.print("Didn't find PN53x board");
     while(1) {}
-  }
+  } //*/
 
   pinMode(plugsPin, INPUT);
   pinMode(buttonPin, INPUT_PULLUP); //if we use INPUT_PULLUP, we don't have to have an external pullup resistor
   pinMode(piezoPin, OUTPUT);
   pinMode(LEDPin, OUTPUT);
-
 }
 
 void loop() {
   if (solvedState) {
     if (checkButton()) handleButtonReset();
   } else {
-    handleRFID();
+    checkRFID();
     if (checkButton()) handleButtonCheck();
     //if (checkPlugs()) handlePlugs();
   }
@@ -75,13 +81,21 @@ bool checkButton(void) {
 void handleButtonCheck(void) {
   int plugsState = analogRead(plugsPin);
   //Serial.println(plugsState);
-  if (connectionState > 400) {
+  if (plugsState > 400) {
     solvedState = true;
     setLED(true);
     Serial.println("Success!");
   } else {
     Serial.println("Try again.");
     tone(piezoPin, 1000, 100);
+  }
+}
+
+void setLED(bool state) {
+  if (state) {
+    digitalWrite(LEDPin, HIGH);
+  } else {
+    digitalWrite(LEDPin, LOW);
   }
 }
 
@@ -113,7 +127,7 @@ void checkRFID(void) {
         for (int hexI = 0; hexI < uidLength; hexI++) {
           if (RFIDs[i][hexI] != uid[hexI]) animalPresent = false;
         }
-        if (animalsPresent) Serial.println(animalsIDs[i]);
+        if (animalPresent) Serial.println(animalIDs[i]);
       }
       /*
       Serial.print(uid[0],HEX);
@@ -127,15 +141,7 @@ void checkRFID(void) {
         return true;
       } else {
         Serial.println("Wrong ID");
-      }
-    } //*/
+      }//*/
+    } 
   }
-}
-
-void setLED(bool state) {
-  if (state) {
-    digitalWrite(LEDPin, HIGH);
-  } else {
-    digitalWrite(LEDPin, LOW);
-  }
-}
+};
