@@ -46,11 +46,18 @@ void setup() {
     Serial.print("Didn't find PN53x board");
     while(1) {}
   } //*/
+  uint32_t versiondata = nfc.getFirmwareVersion();
+  if (! versiondata) {
+    Serial.print("Didn't find PN53x board");
+    while (1); // halt
+  }
 
   pinMode(plugsPins[0], INPUT);
   pinMode(plugsPins[1], INPUT);
   pinMode(plugsPins[2], INPUT);
   pinMode(LEDPin, OUTPUT);
+
+  nfc.SAMConfig();
 }
 
 void loop() {
