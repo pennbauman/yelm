@@ -38,8 +38,11 @@ byte RFIDs[][4] = {
 const int numAnimals = 9;
 
 void setup() {
+  nfc.begin();
   Serial.begin(9600);
+  delay(400);
   Serial.println("-- System Started");
+  
   /*
   if(!SetupRFIDShield()) //sets up the RFID
   {
@@ -71,19 +74,20 @@ void loop() {
 }
 
 bool checkPlugs() {
-  int level = 400;
-  bool fin = false;
+  int level = 0;
+  bool fin = true;
   Serial.print("[");
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 3; i++) {
     int connectionState = analogRead(plugsPins[i]);
-    if (connectionState > level) {
-      fin = true;
-      Serial.print("1");
-    } else {
+    //Serial.print(connectionState);
+    if (connectionState <= level) {
+      fin = false;
       Serial.print("0");
-    }
-  }
-  Serial.print("]");
+    } else {
+      Serial.print("1");
+    } //*/
+  } //*/
+  Serial.println("]");
   return fin;
 }
 
