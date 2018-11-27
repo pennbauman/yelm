@@ -4,9 +4,7 @@
 bool solvedState = false;
 
 // Pins
-const int plugsPin = A0;
-const int buttonPin = 7;
-const int piezoPin = 11;
+const int plugsPins[] = {A0, A1, A2};
 const int LEDPin = 13;
 // RFID Pins
 Adafruit_PN532 nfc(2, 3);
@@ -37,8 +35,6 @@ byte RFIDs[][4] = {
 };
 const int numAnimals = 9;
 
-int pastButton = 0;
-
 void setup() {
   Serial.begin(9600);
   Serial.println("-- System Started");
@@ -49,46 +45,37 @@ void setup() {
     while(1) {}
   } //*/
 
-  pinMode(plugsPin, INPUT);
-  pinMode(buttonPin, INPUT_PULLUP); //if we use INPUT_PULLUP, we don't have to have an external pullup resistor
-  pinMode(piezoPin, OUTPUT);
+  pinMode(plugsPins[0], INPUT);
+  pinMode(plugsPins[1], INPUT);
+  pinMode(plugsPins[2], INPUT);
   pinMode(LEDPin, OUTPUT);
 }
 
 void loop() {
-  if (solvedState) {
-    if (checkButton()) handleButtonReset();
-  } else {
-    checkRFID();
-    if (checkButton()) handleButtonCheck();
-    //if (checkPlugs()) handlePlugs();
-  }
-}
-
-bool checkButton(void) {
-  bool fin = false;
-  
-  int currentButton = digitalRead(buttonPin);
-  if(pastButton != currentButton) {
-    delay(10); //this is a cheat for debouncing
-    if(currentButton == LOW) fin = true;  //button is down => pin reads LOW
-  }
-  pastButton = currentButton;
-
-  return fin;
-}
-
-void handleButtonCheck(void) {
-  int plugsState = analogRead(plugsPin);
-  //Serial.println(plugsState);
-  if (plugsState > 400) {
-    solvedState = true;
+  checkRFID();
+  if (checkPlugs()) {
     setLED(true);
-    Serial.println("Success!");
   } else {
-    Serial.println("Try again.");
-    tone(piezoPin, 1000, 100);
+    setLED(false);
   }
+  delay(100);
+}
+
+bool checkPlugs() {
+  int level = 400;
+  bool fin = false;
+  Serial.print("[");
+  for (int i = 0; i < 2; i++) {
+    int connectionState = analogRead(plugsPins[i]);
+    if (connectionState > level) {
+      fin = true;
+      Serial.print("1");
+    } else {
+      Serial.print("0");
+    }
+  }
+  Serial.print("]");
+  return fin;
 }
 
 void setLED(bool state) {
@@ -97,13 +84,6 @@ void setLED(bool state) {
   } else {
     digitalWrite(LEDPin, LOW);
   }
-}
-
-void handleButtonReset(void) {
-  solvedState = false;
-  Serial.println("-- System Reset");
-  setLED(false);
-  tone(piezoPin, 400, 100);
 }
 
 void checkRFID(void) {
