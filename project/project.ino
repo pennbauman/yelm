@@ -3,6 +3,7 @@
 // Set State
 bool solvedState = false;
 bool LEDState = false;
+int animalPrinted = 10;
 
 // Pins
 const int plugsPins[] = {A0, A1, A2};
@@ -115,7 +116,12 @@ void checkRFID(void) {
         for (int hexI = 0; hexI < uidLength; hexI++) {
           if (RFIDs[i][hexI] != uid[hexI]) animalPresent = false;
         }
-        if (animalPresent) Serial.println(animalIDs[i]);
+        if (animalPresent) {
+          if (i != animalPrinted) {
+            Serial.println(animalIDs[i]);
+            animalPrinted = i;
+          }
+        }
       }
     } 
   }
