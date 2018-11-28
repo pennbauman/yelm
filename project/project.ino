@@ -77,7 +77,7 @@ bool checkPlugs() {
   int level = 0;
   bool fin = true;
   Serial.print("[");
-  for (int i = 0; i < 3; i++) {
+  for (int i = 1; i < 3; i++) {
     int connectionState = analogRead(plugsPins[i]);
     //Serial.print(connectionState);
     if (connectionState <= level) {
