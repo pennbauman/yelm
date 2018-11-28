@@ -11,7 +11,7 @@ Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
 const String animalIDs[] = {
-  "Mon-o'-War",
+  "Man-o'-War",
   "Sea Turtle",
   "Phytoplankton",
   "Brain Coral",
