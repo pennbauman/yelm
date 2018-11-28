@@ -2,16 +2,18 @@
 
 // Set State
 bool solvedState = false;
+bool LEDState = false;
 
 // Pins
 const int plugsPins[] = {A0, A1, A2};
 const int LEDPin = 13;
+const int buttonPin = 7;
 // RFID Pins
 Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
 const String animalIDs[] = {
-  "Mon-o'-War",
+  "Man-o'-War",
   "Sea Turtle",
   "Phytoplankton",
   "Brain Coral",
@@ -43,12 +45,6 @@ void setup() {
   delay(400);
   Serial.println("-- System Started");
   
-  /*
-  if(!SetupRFIDShield()) //sets up the RFID
-  {
-    Serial.print("Didn't find PN53x board");
-    while(1) {}
-  } //*/
   uint32_t versiondata = nfc.getFirmwareVersion();
   if (! versiondata) {
     Serial.print("Didn't find PN53x board");
@@ -59,43 +55,50 @@ void setup() {
   pinMode(plugsPins[1], INPUT);
   pinMode(plugsPins[2], INPUT);
   pinMode(LEDPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
 
   nfc.SAMConfig();
 }
 
 void loop() {
   checkRFID();
-  if (checkPlugs()) {
-    setLED(true);
-  } else {
-    setLED(false);
-  }
+  setLED(checkPlugs() || checkButton());
+  //setLED(true);
   delay(100);
 }
 
-bool checkPlugs() {
+bool checkPlugs(void) {
   int level = 0;
   bool fin = true;
-  Serial.print("[");
-  for (int i = 1; i < 3; i++) {
+  //Serial.print("[");
+  for (int i = 0; i < 3; i++) {
     int connectionState = analogRead(plugsPins[i]);
     //Serial.print(connectionState);
     if (connectionState <= level) {
       fin = false;
-      Serial.print("0");
-    } else {
+      //Serial.print("0");
+    } /*else {
       Serial.print("1");
     } //*/
   } //*/
-  Serial.println("]");
+  //Serial.println("]");
   return fin;
 }
 
+bool checkButton(void) {
+  int buttonState = digitalRead(buttonPin);
+  //Serial.println(buttonState);
+  return (buttonState == LOW);
+}
+
 void setLED(bool state) {
-  if (state) {
-    digitalWrite(LEDPin, HIGH);
-  } else {
-    digitalWrite(LEDPin, LOW);
+  if (state != LEDState) {
+    if (state) {
+      digitalWrite(LEDPin, HIGH);
+    } else {
+      digitalWrite(LEDPin, LOW);
+    }
+    LEDState = state;
   }
 }
 
@@ -105,14 +108,6 @@ void checkRFID(void) {
   bool success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 40); // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found 'uid' will be populated with the UID, and uidLength will indicate if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
   
   if (success) { 
-    /*
-    Serial.print("UID: ");
-    for (int i = 0; i < uidLength; i++) {
-      Serial.print(uid[0]);
-      Serial.print(", ");
-    }
-    Serial.println("");
-    //*/
     //Serial.println("Tag found!");
     if(uidLength == 4) {
       for (int i = 0; i < numAnimals; i++) {
@@ -122,19 +117,6 @@ void checkRFID(void) {
         }
         if (animalPresent) Serial.println(animalIDs[i]);
       }
-      /*
-      Serial.print(uid[0],HEX);
-      Serial.print(uid[1],HEX);
-      Serial.print(uid[2],HEX);
-      Serial.print(uid[3],HEX);//*/
-      /*
-      if(targetID[0] == uid[0] && targetID[1] == uid[1] && targetID[2] == uid[2] && targetID[3] == uid[3])
-      {
-        Serial.println("Match!");
-        return true;
-      } else {
-        Serial.println("Wrong ID");
-      }//*/
     } 
   }
 };
