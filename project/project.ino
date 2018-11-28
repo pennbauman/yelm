@@ -71,18 +71,19 @@ void loop() {
 bool checkPlugs(void) {
   int level = 0;
   bool fin = true;
-  //Serial.print("[");
-  for (int i = 0; i < 3; i++) {
+  String feedback = "[";
+  for (int i = 1; i < 3; i++) {
     int connectionState = analogRead(plugsPins[i]);
     //Serial.print(connectionState);
     if (connectionState <= level) {
       fin = false;
-      //Serial.print("0");
-    } /*else {
-      Serial.print("1");
+      feedback += "0";
+    } else {
+      feedback += "1";
     } //*/
   } //*/
-  //Serial.println("]");
+  feedback += "]";
+  if (feedback != "[00]") Serial.println(feedback);
   return fin;
 }
 
