@@ -11,15 +11,15 @@ Adafruit_PN532 nfc(2, 3);
 
 //Animal RFID Mappings
 const String animalIDs[] = {
-  "1. Mon-o'-War",
-  "2. Sea Turtle",
-  "3. Phytoplankton",
-  "4. Brain Coral",
-  "5. Copepod",
-  "6. Hatchet Fish",
-  "7. Coelacanth",
-  "8. Brittle Star",
-  "9. Blobfish"
+  "Mon-o'-War",
+  "Sea Turtle",
+  "Phytoplankton",
+  "Brain Coral",
+  "Copepod",
+  "Hatchet Fish",
+  "Coelacanth",
+  "Brittle Star",
+  "Blobfish"
 };
 
 byte RFIDs[][4] = {
